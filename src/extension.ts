@@ -14,13 +14,30 @@ export function activate(context: vscode.ExtensionContext) {
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('extension.sayHello', () => {
-        // The code you place here will be executed every time your command is executed
+    let disposable = vscode.commands.registerCommand('extension.sayHello', async () => {
+        const picked = await vscode.window.showQuickPick(["wrench", "bug", "hammer"].map(s => `:${s}:`), { canPickMany: false })
+        const git = vscode.extensions.getExtension("vscode.git")
+        if (git) {
+          //git.exports
+          const extension = await git.activate()
+          const model = extension._model
 
-        const gitSCM = vscode.scm.createSourceControl('git', "Git");
-        gitSCM.inputBox.value = ":hankey: Deine Muddah";
+          //const ws = (vscode.workspace.workspaceFolders || [{ uri: { fsPath: "" }}])[0]
+          //const wsFolder = ws.uri.fsPath
+          //const repo = await model._openRepository(wsFolder)
+          const openRepo = model.openRepositories[0].repository
+          if (openRepo) {
+            const sourceControl: vscode.SourceControl = openRepo.sourceControl || openRepo._sourceControl
+            sourceControl.inputBox.value = ":boom: finally have it!"
+          }
+        }
+
+        //const gitSCM = vscode.scm.createSourceControl('git', "Git");
+        //gitSCM.rootUri
+        // gitSCM.inputBox.value = ":hankey: Deine Muddah";
+        // gitSCM.dispose()
         // Display a message box to the user
-        vscode.window.showInformationMessage('Hello World!');
+        vscode.window.showInformationMessage(`Hello World! ${picked}`);
     });
 
     context.subscriptions.push(disposable);
