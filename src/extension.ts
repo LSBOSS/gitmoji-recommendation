@@ -4,7 +4,7 @@ import * as vscode from "vscode"
 export function activate(context: vscode.ExtensionContext) {
   // The commandId parameter must match the command field in package.json
   const disposable = vscode.commands.registerCommand(
-    "extension.sayHello",
+    "extension.recommendGitmoji",
     async () => {
       const picked = await vscode.window.showQuickPick(
         ["wrench", "bug", "hammer"].map(s => `:${s}:`),
@@ -41,4 +41,4 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
