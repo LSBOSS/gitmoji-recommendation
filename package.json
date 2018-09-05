@@ -17,14 +17,18 @@
   "contributes": {
     "commands": [
       {
-        "command": "extension.sayHello",
-        "title": "Hello World"
+        "command": "extension.recommendGitmoji",
+        "title": "Recommend Gitmoji",
+        "icon": {
+					"light": "resources/light/people.svg",
+					"dark": "resources/dark/people.svg"
+				}
       }
     ],
     "menus": {
       "scm/title": [
         {
-          "command": "extension.sayHello",
+          "command": "extension.recommendGitmoji",
           "group": "navigation@1",
           "when": "scmProvider == git"
         }
