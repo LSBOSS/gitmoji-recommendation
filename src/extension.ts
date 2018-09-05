@@ -13,7 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
       const gitExtension = vscode.extensions.getExtension("vscode.git")
       if (gitExtension) {
         const extension = await gitExtension.activate()
-        const model = extension._model
+        const model = extension.model || extension._model
 
         // Load repository via model
         // const ws = (vscode.workspace.workspaceFolders || [{ uri: { fsPath: "" }}])[0]
