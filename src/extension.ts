@@ -1,4 +1,5 @@
 import * as vscode from "vscode"
+import { printRepository } from "./utils"
 
 // this method is called when your extension is activated (very first time the command is executed)
 export function activate(context: vscode.ExtensionContext) {
@@ -20,19 +21,21 @@ export function activate(context: vscode.ExtensionContext) {
         // const wsFolder = ws.uri.fsPath
         // const repo = await model._openRepository(wsFolder)
         const openRepo = model.openRepositories[0].repository
+
         if (openRepo) {
-          const sourceControl: vscode.SourceControl =
-            openRepo.sourceControl || openRepo._sourceControl
+          console.log("### Current repository state:")
+          printRepository(openRepo)
+
+          openRepo.onDidRunGitStatus(() => {
+            console.log("### Repository changed:")
+            printRepository(openRepo)
+          })
+
+          const sourceControl: vscode.SourceControl = openRepo.sourceControl || openRepo._sourceControl
           sourceControl.inputBox.value = ":boom: finally have it!"
         }
       }
 
-      // Create a new SCM Instance
-      // const gitSCM = vscode.scm.createSourceControl("git", "Git");
-      // gitSCM.rootUri
-      // gitSCM.inputBox.value = ":hankey: Deine Muddah";
-      // gitSCM.dispose()
-      // Display a message box to the user
       vscode.window.showInformationMessage(`Hello World! ${picked}`)
     }
   )
