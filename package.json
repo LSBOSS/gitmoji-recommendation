@@ -20,9 +20,9 @@
         "command": "extension.recommendGitmoji",
         "title": "Recommend Gitmoji",
         "icon": {
-					"light": "resources/light/people.svg",
-					"dark": "resources/dark/people.svg"
-				}
+          "light": "resources/light/people.svg",
+          "dark": "resources/dark/people.svg"
+        }
       }
     ],
     "menus": {

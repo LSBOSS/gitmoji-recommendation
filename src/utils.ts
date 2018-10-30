@@ -1,24 +1,17 @@
-import { SourceControl, CancellationToken, Uri, CancellationTokenSource } from "vscode"
-import { GitResourceGroup } from "./gitinterfaces";
+import { CancellationToken, Uri, CancellationTokenSource } from "vscode"
+import { IGitResourceGroup } from "./gitinterfaces"
 
-interface GitUriParams {
-  path: string;
-  ref: string;
-  submoduleOf?: string;
+interface IRepository {
+  diffWithHEAD(path: string): Promise<string>
+  workingTreeGroup: IGitResourceGroup
+  indexGroup: IGitResourceGroup
+  mergeGroup: IGitResourceGroup
 }
 
-function fromGitUri(uri: Uri): GitUriParams {
-  return JSON.parse(uri.query);
-}
-
-
-async function printResourceGroup(repo: any, group: GitResourceGroup) {
-  const token: CancellationToken = new CancellationTokenSource().token
+async function printResourceGroup(repo: IRepository, group: IGitResourceGroup) {
   group.resourceStates.length > 0
     ? await Promise.all(group.resourceStates.map(
       async element => {
-
-
         try {
           const diffR: string = await repo.diffWithHEAD(element.resourceUri.fsPath)
           console.log(`    ${element.resourceUri}`)
@@ -31,6 +24,7 @@ async function printResourceGroup(repo: any, group: GitResourceGroup) {
         }
 
         // const srcCtrl: SourceControl = repo.sourceControl
+        // const token: CancellationToken = new CancellationTokenSource().token
         // if(srcCtrl.quickDiffProvider && srcCtrl.quickDiffProvider.provideOriginalResource) {
         //   const result = await srcCtrl.quickDiffProvider.provideOriginalResource(element.resourceUri, token)
         //   console.log(`    +--${result}`)
@@ -41,10 +35,10 @@ async function printResourceGroup(repo: any, group: GitResourceGroup) {
   console.log("\n")
 }
 
-export async function printRepository(repo: any) {
-  const changes = repo.workingTreeGroup as GitResourceGroup
-  const stagedChanges = repo.indexGroup as GitResourceGroup
-  const mergeChanges = repo.mergeGroup as GitResourceGroup
+export async function printRepository(repo: IRepository) {
+  const changes = repo.workingTreeGroup
+  const stagedChanges = repo.indexGroup
+  const mergeChanges = repo.mergeGroup
 
   console.log("Changes:")
   await printResourceGroup(repo, changes)
