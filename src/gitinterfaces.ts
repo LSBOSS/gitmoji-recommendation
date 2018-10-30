@@ -1,5 +1,5 @@
 import { SourceControlResourceGroup, SourceControlResourceState } from "vscode"
 
-export interface GitResourceGroup extends SourceControlResourceGroup {
-    resourceStates: SourceControlResourceState[];
+export interface IGitResourceGroup extends SourceControlResourceGroup {
+    resourceStates: SourceControlResourceState[]
 }

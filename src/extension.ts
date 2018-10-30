@@ -24,12 +24,12 @@ export function activate(context: vscode.ExtensionContext) {
 
         if (openRepo) {
           console.log("### Current repository state:")
-          printRepository(openRepo)
+          await printRepository(openRepo)
 
-          openRepo.onDidRunGitStatus(() => {
-            console.log("### Repository changed:")
-            printRepository(openRepo)
-          })
+          // openRepo.onDidRunGitStatus(() => {
+          //   console.log("### Repository changed:")
+          //   printRepository(openRepo)
+          // })
 
           const sourceControl: vscode.SourceControl = openRepo.sourceControl || openRepo._sourceControl
           sourceControl.inputBox.value = ":boom: finally have it!"
