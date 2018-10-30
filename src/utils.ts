@@ -1,4 +1,3 @@
-import { CancellationToken, Uri, CancellationTokenSource } from "vscode"
 import { IGitResourceGroup } from "./gitinterfaces"
 
 interface IRepository {
@@ -8,6 +7,30 @@ interface IRepository {
   mergeGroup: IGitResourceGroup
 }
 
+function analyzeHunk(hunk: string[]) {
+  if (hunk.length === 0)
+    return
+
+  console.log("------------------------------------------------")
+  console.log(hunk.join("\n"))
+  console.log("------------------------------------------------")
+}
+
+function diffStringToHunk(diff: string) {
+  const diffLines = diff.split("\n")
+  let currentHunk: string[] = []
+  for (let line = 4; line < diffLines.length; line++) {
+    const currentLine = diffLines[line]
+    if (currentLine.startsWith("@@")) {
+      analyzeHunk(currentHunk)
+      currentHunk = []
+    } else {
+      currentHunk.push(currentLine)
+    }
+  }
+  analyzeHunk(currentHunk)
+}
+
 async function printResourceGroup(repo: IRepository, group: IGitResourceGroup) {
   group.resourceStates.length > 0
     ? await Promise.all(group.resourceStates.map(
@@ -15,10 +38,7 @@ async function printResourceGroup(repo: IRepository, group: IGitResourceGroup) {
         try {
           const diffR: string = await repo.diffWithHEAD(element.resourceUri.fsPath)
           console.log(`    ${element.resourceUri}`)
-          diffR.split("\n").forEach(l => {
-            console.log(`    ${l}`)
-          })
-          console.log()
+          diffStringToHunk(diffR)
         } catch (err) {
           console.error(err)
         }
